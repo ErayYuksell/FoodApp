@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   Image,
   FlatList,
+  ScrollView,
 } from "react-native";
 import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import categoriesData from "../asssets/data/categoriesData";
@@ -46,87 +47,97 @@ const Home = () => {
   };
   return (
     <View style={styles.container}>
-      {/* Header */}
-      <SafeAreaView>
-        <View style={styles.headerWrapper}>
-          <Image
-            style={styles.profileImage}
-            source={require("../asssets/images/profile.png")}
-          />
-          <Feather name="menu" size={24} color={colors.textDark} />
-        </View>
-      </SafeAreaView>
+      <ScrollView
+        contentInsetAdjustmentBehavior="automatic"
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Header */}
+        <SafeAreaView>
+          <View style={styles.headerWrapper}>
+            <Image
+              style={styles.profileImage}
+              source={require("../asssets/images/profile.png")}
+            />
+            <Feather name="menu" size={24} color={colors.textDark} />
+          </View>
+        </SafeAreaView>
 
-      {/* Titles */}
-      <View style={styles.titlesWrapper}>
-        <Text style={styles.titlesSubtitle}>Food</Text>
-        <Text style={styles.titlesTitles}>Delivery</Text>
-      </View>
-
-      {/* Search */}
-      <View style={styles.searchWrapper}>
-        <Feather name="search" size={24} color={colors.textDark} />
-        <View style={styles.search}>
-          <Text style={styles.searchText}>Search</Text>
+        {/* Titles */}
+        <View style={styles.titlesWrapper}>
+          <Text style={styles.titlesSubtitle}>Food</Text>
+          <Text style={styles.titlesTitles}>Delivery</Text>
         </View>
-      </View>
 
-      {/* Catagories */}
-      <View style={styles.categoriesWrapper}>
-        <Text style={styles.categoriesTitle}>Catagories</Text>
-        <View style={styles.categoriesListWrapper}>
-          <FlatList
-            data={categoriesData}
-            keyExtractor={(item) => item.id}
-            renderItem={renderCatagoryItem}
-            horizontal={true}
-          />
+        {/* Search */}
+        <View style={styles.searchWrapper}>
+          <Feather name="search" size={24} color={colors.textDark} />
+          <View style={styles.search}>
+            <Text style={styles.searchText}>Search</Text>
+          </View>
         </View>
-        {/* Popular */}
-        <View style={styles.popularWrapper}>
-          <Text style={styles.popularTitle}>Popular</Text>
-          {popularData.map((item) => (
-            <View
-              style={[
-                styles.popularCardWrapper,
-                { marginTop: item.id == 1 ? 10 : 20 },
-              ]}
-            >
-              <View>
+
+        {/* Catagories */}
+        <View style={styles.categoriesWrapper}>
+          <Text style={styles.categoriesTitle}>Catagories</Text>
+          <View style={styles.categoriesListWrapper}>
+            <FlatList
+              data={categoriesData}
+              keyExtractor={(item) => item.id}
+              renderItem={renderCatagoryItem}
+              horizontal={true}
+            />
+          </View>
+          {/* Popular */}
+          <View style={styles.popularWrapper}>
+            <Text style={styles.popularTitle}>Popular</Text>
+            {popularData.map((item) => (
+              <View
+                style={[
+                  styles.popularCardWrapper,
+                  { marginTop: item.id == 1 ? 10 : 20 },
+                ]}
+              >
                 <View>
-                  <View style={styles.popularTopWrapper}>
-                    <MaterialCommunityIcons
-                      name="crown"
-                      size={12}
-                      color={colors.primary}
-                    />
-                    <Text style={styles.popularTopText}>Top of the week</Text>
+                  <View>
+                    <View style={styles.popularTopWrapper}>
+                      <MaterialCommunityIcons
+                        name="crown"
+                        size={12}
+                        color={colors.primary}
+                      />
+                      <Text style={styles.popularTopText}>Top of the week</Text>
+                    </View>
+                    <View style={styles.popularTitlesWrapper}>
+                      <Text style={styles.popularTitlesTitle}>
+                        {item.title}
+                      </Text>
+                      <Text style={styles.popularTitlesWeight}>
+                        Weight {item.weight}
+                      </Text>
+                    </View>
                   </View>
-                  <View style={styles.popularTitlesWrapper}>
-                    <Text style={styles.popularTitlesTitle}>{item.title}</Text>
-                    <Text style={styles.popularTitlesWeight}>
-                      Weight {item.weight}
-                    </Text>
+                  <View style={styles.popularCardBottom}>
+                    <View style={styles.addPizzaButton}>
+                      <Feather name="plus" size={10} color={colors.textDark} />
+                    </View>
+                    <View style={styles.ratingWrapper}>
+                      <MaterialCommunityIcons
+                        name="star"
+                        size={10}
+                        color={colors.textDark}
+                      />
+                      <Text style={styles.rating}>{item.rating}</Text>
+                    </View>
                   </View>
                 </View>
-                <View style={styles.popularCardBottom}>
-                  <View style={styles.addPizzaButton}>
-                    <Feather name="plus" size={10} color={colors.textDark} />
-                  </View>
-                  <View style={styles.ratingWrapper}>
-                    <MaterialCommunityIcons
-                      name="star"
-                      size={10}
-                      color={colors.textDark}
-                    />
-                    <Text style={styles.itemRating}>{item.rating}</Text>
-                  </View>
+                <View style={styles.popularCardRight}>
+                  <Image style={styles.popularCardImage} source={item.image} />
                 </View>
               </View>
-            </View>
-          ))}
+            ))}
+          </View>
         </View>
-      </View>
+      </ScrollView>
     </View>
   );
 };
@@ -170,6 +181,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#F5CA48",
     marginRight: 20,
     borderRadius: 20,
+    shadowColor: colors.black,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.05,
+    shadowRadius: 10,
+    elevation: 2,
   },
   categoryItemImage: {
     width: 60,
@@ -197,6 +216,15 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     paddingLeft: 20,
     flexDirection: "row",
+    overflow: "hidden",
+    shadowColor: colors.black,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.05,
+    shadowRadius: 10,
+    elevation: 2,
   },
   popularTopWrapper: { flexDirection: "row", alignItems: "center" },
   popularTopText: { marginLeft: 10, fontSize: 14 },
@@ -227,8 +255,15 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 25,
     borderBottomLeftRadius: 25,
   },
-  ratingWrapper: {},
-  itemRating: {},
+  ratingWrapper: { flexDirection: "row", alignItems: "center", marginLeft: 20 },
+  rating: {
+    fontSize: 12,
+    color: colors.textDark,
+    fontWeight: "bold",
+    marginLeft: 5,
+  }, //fontFamily hata veriyor
+  popularCardRight: { marginLeft: 40 },
+  popularCardImage: { width: 210, height: 125, resizeMode: "contain" },
 });
 
 export default Home;
