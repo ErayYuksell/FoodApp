@@ -1,10 +1,30 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  FlatList,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import colors from "../asssets/colors/colors";
 
 const Details = ({ route, navigation }) => {
+  const renderIngredientsItem = ({ item }) => {
+    return (
+      <View
+        style={[
+          styles.ingredientsItemWrapper,
+          { marginLeft: item.id == 1 ? 20 : 0 },
+        ]}
+      >
+        <Image source={item.image} style={styles.ingredientsImage} />
+      </View>
+    );
+  };
+
   const { item } = route.params; //navigation paketi ile gelen bir props bu sayfaya home dan veri aktarımını sağlar
   console.log(item);
   return (
@@ -53,15 +73,32 @@ const Details = ({ route, navigation }) => {
               <Text style={styles.infoItemText}>{item.deliveryTime} min</Text>
             </View>
           </View>
-          <View >
+          <View>
             <Image source={item.image} style={styles.itemImage} />
           </View>
         </View>
 
         {/* Ingredients */}
-        <View>
-            
+        <View style={styles.ingredientsWrapper}>
+          <Text style={styles.ingredientsTitle}>Ingredients</Text>
+          <View style={styles.ingredientsListWrapper}>
+            <FlatList
+              data={item.ingredients}
+              keyExtractor={(item) => item.id}
+              renderItem={renderIngredientsItem}
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
+            />
+          </View>
         </View>
+
+        {/* Place an order */}
+        <TouchableOpacity onPress={() => alert("Your order has been placed!")}>
+          <View style={styles.orderWrapper}>
+            <Text style={styles.orderText}>Place an order</Text>
+            <Feather name="chevron-right" size={12} color={colors.black} />
+          </View>
+        </TouchableOpacity>
       </SafeAreaView>
     </View>
   );
@@ -109,6 +146,46 @@ const styles = StyleSheet.create({
   infoItemTitle: { fontSize: 14, color: colors.textLight },
   infoItemText: { fontSize: 18, color: colors.textDark },
   itemImage: { marginLeft: 50, resizeMode: "contain" },
+  ingredientsWrapper: { marginTop: 40 },
+  ingredientsTitle: {
+    paddingHorizontal: 20,
+    fontSize: 16,
+    color: colors.textDark,
+    fontWeight: "bold",
+  },
+  ingredientsListWrapper: { paddingVertical: 20 },
+  ingredientsItemWrapper: {
+    backgroundColor: colors.white,
+    paddingHorizontal: 20,
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 15,
+    borderRadius: 15,
+    shadowColor: colors.black,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.05,
+    shadowRadius: 10,
+    elevation: 2,
+  },
+  ingredientsImage: { resizeMode: "contain" },
+  orderWrapper: {
+    marginTop: 60,
+    marginHorizontal: 20,
+    backgroundColor: colors.primary,
+    borderRadius: 50,
+    paddingVertical: 25,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  orderText: {
+    marginRight: 10,
+    fontSize: 14,
+    fontWeight: "bold",
+  },
 });
 
 export default Details;
