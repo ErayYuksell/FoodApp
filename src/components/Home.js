@@ -7,13 +7,14 @@ import {
   Image,
   FlatList,
   ScrollView,
+  TouchableOpacity,
 } from "react-native";
 import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import categoriesData from "../asssets/data/categoriesData";
 import popularData from "../asssets/data/popularData";
 import colors from "../asssets/colors/colors";
 
-const Home = () => {
+const Home = ({ navigation }) => {
   const renderCatagoryItem = ({ item }) => {
     return (
       <View
@@ -91,49 +92,63 @@ const Home = () => {
           <View style={styles.popularWrapper}>
             <Text style={styles.popularTitle}>Popular</Text>
             {popularData.map((item) => (
-              <View
-                style={[
-                  styles.popularCardWrapper,
-                  { marginTop: item.id == 1 ? 10 : 20 },
-                ]}
+              <TouchableOpacity
+                key={item.id}
+                onPress={() => navigation.navigate("Details", { item })} //details sayfasına göndermek istediğim veriyi burda obje olarak tanımlıyorum
               >
-                <View>
+                <View
+                  style={[
+                    styles.popularCardWrapper,
+                    { marginTop: item.id == 1 ? 10 : 20 },
+                  ]}
+                >
                   <View>
-                    <View style={styles.popularTopWrapper}>
-                      <MaterialCommunityIcons
-                        name="crown"
-                        size={12}
-                        color={colors.primary}
-                      />
-                      <Text style={styles.popularTopText}>Top of the week</Text>
+                    <View>
+                      <View style={styles.popularTopWrapper}>
+                        <MaterialCommunityIcons
+                          name="crown"
+                          size={12}
+                          color={colors.primary}
+                        />
+                        <Text style={styles.popularTopText}>
+                          Top of the week
+                        </Text>
+                      </View>
+                      <View style={styles.popularTitlesWrapper}>
+                        <Text style={styles.popularTitlesTitle}>
+                          {item.title}
+                        </Text>
+                        <Text style={styles.popularTitlesWeight}>
+                          Weight {item.weight}
+                        </Text>
+                      </View>
                     </View>
-                    <View style={styles.popularTitlesWrapper}>
-                      <Text style={styles.popularTitlesTitle}>
-                        {item.title}
-                      </Text>
-                      <Text style={styles.popularTitlesWeight}>
-                        Weight {item.weight}
-                      </Text>
+                    <View style={styles.popularCardBottom}>
+                      <View style={styles.addPizzaButton}>
+                        <Feather
+                          name="plus"
+                          size={10}
+                          color={colors.textDark}
+                        />
+                      </View>
+                      <View style={styles.ratingWrapper}>
+                        <MaterialCommunityIcons
+                          name="star"
+                          size={10}
+                          color={colors.textDark}
+                        />
+                        <Text style={styles.rating}>{item.rating}</Text>
+                      </View>
                     </View>
                   </View>
-                  <View style={styles.popularCardBottom}>
-                    <View style={styles.addPizzaButton}>
-                      <Feather name="plus" size={10} color={colors.textDark} />
-                    </View>
-                    <View style={styles.ratingWrapper}>
-                      <MaterialCommunityIcons
-                        name="star"
-                        size={10}
-                        color={colors.textDark}
-                      />
-                      <Text style={styles.rating}>{item.rating}</Text>
-                    </View>
+                  <View style={styles.popularCardRight}>
+                    <Image
+                      style={styles.popularCardImage}
+                      source={item.image}
+                    />
                   </View>
                 </View>
-                <View style={styles.popularCardRight}>
-                  <Image style={styles.popularCardImage} source={item.image} />
-                </View>
-              </View>
+              </TouchableOpacity>
             ))}
           </View>
         </View>
